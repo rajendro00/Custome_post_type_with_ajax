@@ -7,6 +7,7 @@ class post_form{
         add_shortcode('post_form_forntend', [$this, 'post_form_forntend']);
         add_action('init', [$this, 'create_story_post']);
         add_action('wp_enqueue_scripts', [$this,'form_enqueue_script']);
+        add_action('wp_ajax_custom_post_form_call', [$this,'custome_form_post_ajax']);
     }
 
     function post_form_forntend(){
@@ -71,7 +72,11 @@ class post_form{
                     </td>
                 </tr>
             </table>
+            <div class="preloader">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle fill="#FF156D" stroke="#FF156D" stroke-width="3" r="15" cx="40" cy="65"><animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate></circle><circle fill="#FF156D" stroke="#FF156D" stroke-width="3" r="15" cx="100" cy="65"><animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate></circle><circle fill="#FF156D" stroke="#FF156D" stroke-width="3" r="15" cx="160" cy="65"><animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate></circle></svg>
+            </div>
             <input type="submit" name="create_post" value="Create Post">
+            <div class="error-show"></div>
         </form>
 
        <?php return ob_get_clean();
@@ -116,7 +121,32 @@ class post_form{
 
     function custome_form_post_ajax(){
         
-        
-        
+        parse_str($_POST['post_id'], $form_data);
+
+            $title =  sanitize_text_field($form_data['title']) ;
+            $content =  sanitize_textarea_field($form_data['content']) ;
+            $category =  intval($form_data['post_category']) ;
+            $post_status =  sanitize_text_field($form_data['post_status']);
+
+            $args = [
+                'post_type' => 'story',
+                'post_title' =>  $title,
+                'post_content' =>  $content,
+                'post_status' =>  $post_status,
+                'tax_input'     => [
+                    'stories_category' => [$category]
+               ]
+            ];
+            
+
+            $post_id = wp_insert_post($args);
+            if(is_wp_error($post_id)){
+                echo 'Error'. $post_id->get_error_message();
+              }else{
+                wp_send_json_success( "Success" );
+            }
+            
+
+        wp_die();
     }
 }
