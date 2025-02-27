@@ -1,0 +1,19 @@
+.tabs{
+    max-width: 1000px;
+    background-color: antiquewhite;
+}
+.nav-items{
+    display: flex;
+    justify-content: space-between;
+}
+.nav-item{
+    background-color: aquamarine;
+    list-style: none;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.content-wrapper{
+    padding: 20px;
+}

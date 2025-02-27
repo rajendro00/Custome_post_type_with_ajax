@@ -18,8 +18,10 @@
         // add_shortcode( 'custome_post_type_shortcode', [$this, 'custome_post_type_display'] );
         add_action('init', [$this, 'custome_post_type']);
         include __DIR__.'/include/post-form.php';
+        include __DIR__.'/include/tab-category.php';
         define('PLUGIN_ASSETS_DIR_PUBLIC', plugin_dir_url(__FILE__). 'assets/public/');
         new post_form();
+        new custom_tab_category();
     }
 
     function custome_post_type(){
