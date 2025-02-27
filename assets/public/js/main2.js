@@ -14,9 +14,10 @@ jQuery(function($){
             }
         });
     });
+
     $(window).on("load", function(){
         let cat_id = $(".nav-items li:first-child").data("target");
-
+        
         $.ajax({
             type: 'post',
             url: category_obj.ajax_url,
